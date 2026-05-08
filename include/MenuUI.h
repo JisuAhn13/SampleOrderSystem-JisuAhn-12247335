@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
+#include <vector>
 
+class Sample;
+class Order;
 class SampleManager;
 class OrderManager;
 class ProductionLine;
@@ -34,4 +37,7 @@ private:
     static void        printSeparator();
     static void        clearScreen();
     static void        printProgressBar(int current, int total, int barWidth = 30);
+
+    void printSampleRows(const std::vector<Sample*>& samples) const;
+    void printReservedOrderRows(const std::vector<Order*>& orders) const;
 };

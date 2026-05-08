@@ -16,7 +16,6 @@ std::string statusToString(OrderStatus s);
 
 class Order {
 public:
-    Order() = default;
     Order(int orderId, Sample* sample, const std::string& customerName, int quantity);
 
     int getOrderId() const;

@@ -13,7 +13,7 @@ public:
                            const std::string& name,
                            double avgTime, double yield);  // 중복 ID 시 nullptr 반환
 
-    std::vector<Sample*> getAllSamples() const;
+    std::vector<Sample*> getAllSamples();
     Sample*              findById(const std::string& id);
     std::vector<Sample*> searchByName(const std::string& keyword);
 };

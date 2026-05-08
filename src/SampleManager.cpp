@@ -15,12 +15,12 @@ Sample* SampleManager::registerSample(const std::string& id,
     return &m_samples.back();
 }
 
-std::vector<Sample*> SampleManager::getAllSamples() const
+std::vector<Sample*> SampleManager::getAllSamples()
 {
     std::vector<Sample*> result;
     result.reserve(m_samples.size());
     for (auto& s : m_samples) {
-        result.push_back(const_cast<Sample*>(&s));
+        result.push_back(&s);
     }
     return result;
 }

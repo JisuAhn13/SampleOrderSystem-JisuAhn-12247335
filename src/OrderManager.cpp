@@ -58,20 +58,20 @@ Order* OrderManager::findById(int orderId)
     return nullptr;
 }
 
-std::vector<Order*> OrderManager::getOrdersByStatus(OrderStatus status) const
+std::vector<Order*> OrderManager::getOrdersByStatus(OrderStatus status)
 {
     std::vector<Order*> result;
     for (auto& o : m_orders) {
-        if (o.getStatus() == status) result.push_back(const_cast<Order*>(&o));
+        if (o.getStatus() == status) result.push_back(&o);
     }
     return result;
 }
 
-std::vector<Order*> OrderManager::getAllActiveOrders() const
+std::vector<Order*> OrderManager::getAllActiveOrders()
 {
     std::vector<Order*> result;
     for (auto& o : m_orders) {
-        if (o.getStatus() != OrderStatus::REJECTED) result.push_back(const_cast<Order*>(&o));
+        if (o.getStatus() != OrderStatus::REJECTED) result.push_back(&o);
     }
     return result;
 }

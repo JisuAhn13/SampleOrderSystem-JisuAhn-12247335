@@ -14,7 +14,7 @@ Monitor::Monitor(OrderManager& orderMgr, SampleManager& sampleMgr)
 {
 }
 
-void Monitor::showOrderStatus() const
+void Monitor::showOrderStatus()
 {
     struct Section { OrderStatus status; const char* label; const char* icon; };
     const Section sections[] = {
@@ -43,7 +43,7 @@ void Monitor::showOrderStatus() const
     }
 }
 
-void Monitor::showStockStatus() const
+void Monitor::showStockStatus()
 {
     auto samples = m_sampleMgr.getAllSamples();
     if (samples.empty()) {

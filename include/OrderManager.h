@@ -15,8 +15,8 @@ public:
     bool   approveOrder(int orderId);
     bool   rejectOrder(int orderId);
 
-    std::vector<Order*> getOrdersByStatus(OrderStatus status) const;
-    std::vector<Order*> getAllActiveOrders() const;  // REJECTED 제외
+    std::vector<Order*> getOrdersByStatus(OrderStatus status);
+    std::vector<Order*> getAllActiveOrders();  // REJECTED 제외
     Order*              findById(int orderId);
 
 private:

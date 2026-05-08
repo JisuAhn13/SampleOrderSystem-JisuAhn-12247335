@@ -4,18 +4,13 @@
 
 class Sample {
 public:
-    Sample() = default;
     Sample(const std::string& id, const std::string& name, double avgProductionTime, double yield, int stock);
 
-    const std::string& getId() const;
-    const std::string& getName() const;
-    double getAvgProductionTime() const;
-    double getYield() const;
-    int getStock() const;
-
-    void setName(const std::string& name);
-    void setAvgProductionTime(double avgProductionTime);
-    void setYield(double yield);
+    const std::string& getId()              const;
+    const std::string& getName()            const;
+    double             getAvgProductionTime() const;
+    double             getYield()           const;
+    int                getStock()           const;
 
     void addStock(int qty);
     bool reduceStock(int qty);

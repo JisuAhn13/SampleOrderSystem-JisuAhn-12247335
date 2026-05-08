@@ -51,9 +51,10 @@ void MenuUI::printSeparator()
     ConsoleUI::printBoxMid();
 }
 
-int MenuUI::getIntInput(const std::string& prompt)
+template<typename T>
+static T readNumericInput(const std::string& prompt)
 {
-    int val;
+    T val;
     while (true) {
         std::cout << std::string(ConsoleUI::LEFT_PAD, ' ') << prompt;
         if (std::cin >> val) break;
@@ -65,18 +66,14 @@ int MenuUI::getIntInput(const std::string& prompt)
     return val;
 }
 
+int MenuUI::getIntInput(const std::string& prompt)
+{
+    return readNumericInput<int>(prompt);
+}
+
 double MenuUI::getDoubleInput(const std::string& prompt)
 {
-    double val;
-    while (true) {
-        std::cout << std::string(ConsoleUI::LEFT_PAD, ' ') << prompt;
-        if (std::cin >> val) break;
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << std::string(ConsoleUI::LEFT_PAD, ' ') << "  숫자를 입력해주세요.\n";
-    }
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    return val;
+    return readNumericInput<double>(prompt);
 }
 
 std::string MenuUI::getStringInput(const std::string& prompt)
@@ -85,6 +82,38 @@ std::string MenuUI::getStringInput(const std::string& prompt)
     std::cout << std::string(ConsoleUI::LEFT_PAD, ' ') << prompt;
     std::getline(std::cin, val);
     return val;
+}
+
+// ─── 공용 행 출력 헬퍼 ───────────────────────────────────────────────────────
+
+void MenuUI::printSampleRows(const std::vector<Sample*>& samples) const
+{
+    ConsoleUI::printBoxLine("   ID           이름            생산시간   수율   재고");
+    ConsoleUI::printBoxMid();
+    for (const Sample* s : samples) {
+        std::ostringstream oss;
+        oss << "   " << std::left << std::setw(12) << s->getId()
+            << std::setw(14) << s->getName()
+            << std::right << std::setw(6) << std::fixed
+            << std::setprecision(1) << s->getAvgProductionTime()
+            << "s   " << std::setprecision(2) << s->getYield()
+            << "   " << s->getStock();
+        ConsoleUI::printBoxLine(oss.str());
+    }
+}
+
+void MenuUI::printReservedOrderRows(const std::vector<Order*>& orders) const
+{
+    ConsoleUI::printBoxLine("   주문ID   시료명            고객명         수량");
+    ConsoleUI::printBoxMid();
+    for (const Order* o : orders) {
+        std::ostringstream row;
+        row << "   " << std::left << std::setw(7) << o->getOrderId()
+            << std::setw(16) << o->getSample()->getName()
+            << std::setw(13) << o->getCustomerName()
+            << std::right << o->getQuantity();
+        ConsoleUI::printBoxLine(row.str());
+    }
 }
 
 // ─── 메인 루프 ────────────────────────────────────────────────────────────────
@@ -206,18 +235,7 @@ void MenuUI::handleSampleManagement()
                 if (samples.empty()) {
                     ConsoleUI::printBoxLine("   등록된 시료가 없습니다.");
                 } else {
-                    ConsoleUI::printBoxLine("   ID           이름            생산시간   수율   재고");
-                    ConsoleUI::printBoxMid();
-                    for (Sample* s : samples) {
-                        std::ostringstream oss;
-                        oss << "   " << std::left << std::setw(12) << s->getId()
-                            << std::setw(14) << s->getName()
-                            << std::right << std::setw(6) << std::fixed
-                            << std::setprecision(1) << s->getAvgProductionTime()
-                            << "s   " << std::setprecision(2) << s->getYield()
-                            << "   " << s->getStock();
-                        ConsoleUI::printBoxLine(oss.str());
-                    }
+                    printSampleRows(samples);
                 }
                 ConsoleUI::printBoxBot();
                 getStringInput("  [Enter = 계속] > ");
@@ -235,18 +253,7 @@ void MenuUI::handleSampleManagement()
                 if (results.empty()) {
                     ConsoleUI::printBoxLine("   검색 결과가 없습니다.");
                 } else {
-                    ConsoleUI::printBoxLine("   ID           이름            생산시간   수율   재고");
-                    ConsoleUI::printBoxMid();
-                    for (Sample* s : results) {
-                        std::ostringstream oss;
-                        oss << "   " << std::left << std::setw(12) << s->getId()
-                            << std::setw(14) << s->getName()
-                            << std::right << std::setw(6) << std::fixed
-                            << std::setprecision(1) << s->getAvgProductionTime()
-                            << "s   " << std::setprecision(2) << s->getYield()
-                            << "   " << s->getStock();
-                        ConsoleUI::printBoxLine(oss.str());
-                    }
+                    printSampleRows(results);
                 }
                 ConsoleUI::printBoxBot();
                 getStringInput("  [Enter = 계속] > ");
@@ -324,16 +331,7 @@ void MenuUI::handleOrderManagement()
                 if (orders.empty()) {
                     ConsoleUI::printBoxLine("   접수된 주문이 없습니다.");
                 } else {
-                    ConsoleUI::printBoxLine("   주문ID   시료명            고객명         수량");
-                    ConsoleUI::printBoxMid();
-                    for (Order* o : orders) {
-                        std::ostringstream row;
-                        row << "   " << std::left << std::setw(7) << o->getOrderId()
-                            << std::setw(16) << o->getSample()->getName()
-                            << std::setw(13) << o->getCustomerName()
-                            << std::right << o->getQuantity();
-                        ConsoleUI::printBoxLine(row.str());
-                    }
+                    printReservedOrderRows(orders);
                 }
                 ConsoleUI::printBoxBot();
                 getStringInput("  [Enter = 계속] > ");
@@ -351,16 +349,7 @@ void MenuUI::handleOrderManagement()
                     ConsoleUI::printBoxBot();
                     continue;
                 }
-                ConsoleUI::printBoxLine("   주문ID   시료명            고객명         수량");
-                ConsoleUI::printBoxMid();
-                for (Order* o : reserved) {
-                    std::ostringstream row;
-                    row << "   " << std::left << std::setw(7) << o->getOrderId()
-                        << std::setw(16) << o->getSample()->getName()
-                        << std::setw(13) << o->getCustomerName()
-                        << std::right << o->getQuantity();
-                    ConsoleUI::printBoxLine(row.str());
-                }
+                printReservedOrderRows(reserved);
                 ConsoleUI::printBoxMid();
                 int orderId = getIntInput("  승인할 주문 ID: ");
                 if (m_orderMgr.approveOrder(orderId)) {
@@ -538,7 +527,6 @@ void MenuUI::handleProductionLine()
                     int    sht  = job->getShortage();
                     int    tgt  = job->getTargetQty();
                     int    cur  = job->getProducedQty();
-                    double tot  = job->getTotalTime();
                     double rem  = job->getRemainingTime();
 
                     int remMin = static_cast<int>(rem) / 60;
@@ -568,13 +556,13 @@ void MenuUI::handleProductionLine()
                     }
                     ConsoleUI::printBoxEmpty();
                     {
+                        constexpr int BAR_WIDTH = 24;
                         std::ostringstream bar;
                         bar << "   진행률   :  ";
-                        int barW = 24;
-                        int filled = (tgt > 0) ? (cur * barW / tgt) : 0;
-                        if (filled > barW) filled = barW;
+                        int filled = (tgt > 0) ? (cur * BAR_WIDTH / tgt) : 0;
+                        if (filled > BAR_WIDTH) filled = BAR_WIDTH;
                         bar << "[";
-                        for (int i = 0; i < barW; ++i)
+                        for (int i = 0; i < BAR_WIDTH; ++i)
                             bar << (i < filled ? "█" : "░");
                         bar << "]  " << cur << " / " << tgt;
                         ConsoleUI::printBoxLine(bar.str());

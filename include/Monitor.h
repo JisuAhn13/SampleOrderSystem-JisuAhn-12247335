@@ -7,8 +7,8 @@ class Monitor {
 public:
     Monitor(OrderManager& orderMgr, SampleManager& sampleMgr);
 
-    void showOrderStatus() const;
-    void showStockStatus() const;
+    void showOrderStatus();
+    void showStockStatus();
 
 private:
     OrderManager& m_orderMgr;

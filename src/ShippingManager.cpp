@@ -13,7 +13,7 @@ ShippingManager::ShippingManager(OrderManager& orderMgr)
 {
 }
 
-void ShippingManager::showConfirmedOrders() const
+void ShippingManager::showConfirmedOrders()
 {
     auto orders = m_orderMgr.getOrdersByStatus(OrderStatus::CONFIRMED);
     if (orders.empty()) {

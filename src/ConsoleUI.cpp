@@ -7,6 +7,7 @@ namespace ConsoleUI {
 static std::string rep(const std::string& s, int n)
 {
     std::string r;
+    r.reserve(s.size() * static_cast<std::size_t>(n));
     for (int i = 0; i < n; ++i) r += s;
     return r;
 }

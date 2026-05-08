@@ -9,7 +9,6 @@ class ProductionJob {
     using TimePoint = std::chrono::time_point<Clock>;
 
 public:
-    ProductionJob() = default;
     ProductionJob(Order* order, int shortage);
 
     void   start();
