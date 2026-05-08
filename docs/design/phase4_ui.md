@@ -98,7 +98,6 @@ void handleXxx() {
 | 시료 이름 | string | 비어있지 않을 것 |
 | 평균 생산시간 | double | > 0 |
 | 수율 | double | 0.0 < yield <= 1.0 |
-| 초기 재고 | int | >= 0 |
 
 ### 주문 접수 입력
 
