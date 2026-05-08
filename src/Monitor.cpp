@@ -3,7 +3,7 @@
 #include "SampleManager.h"
 #include "Order.h"
 #include "Sample.h"
-#include "MenuUI.h"
+#include "ConsoleUI.h"
 
 #include <iostream>
 #include <iomanip>
@@ -26,10 +26,10 @@ void Monitor::showOrderStatus() const
 
     for (const auto& sec : sections) {
         std::string header = std::string("  ") + sec.icon + "  [ " + sec.label + " ]";
-        MenuUI::printBoxLine(header);
+        ConsoleUI::printBoxLine(header);
         auto orders = m_orderMgr.getOrdersByStatus(sec.status);
         if (orders.empty()) {
-            MenuUI::printBoxLine("       (없음)");
+            ConsoleUI::printBoxLine("       (없음)");
         } else {
             for (const auto* o : orders) {
                 std::ostringstream row;
@@ -37,7 +37,7 @@ void Monitor::showOrderStatus() const
                     << std::setw(14) << o->getSample()->getName()
                     << std::setw(12) << o->getCustomerName()
                     << std::right << o->getQuantity() << " 개";
-                MenuUI::printBoxLine(row.str());
+                ConsoleUI::printBoxLine(row.str());
             }
         }
     }
@@ -47,12 +47,12 @@ void Monitor::showStockStatus() const
 {
     auto samples = m_sampleMgr.getAllSamples();
     if (samples.empty()) {
-        MenuUI::printBoxLine("   등록된 시료가 없습니다.");
+        ConsoleUI::printBoxLine("   등록된 시료가 없습니다.");
         return;
     }
 
-    MenuUI::printBoxLine("   ID           이름           재고  대기주문  상태");
-    MenuUI::printBoxMid();
+    ConsoleUI::printBoxLine("   ID           이름           재고  대기주문  상태");
+    ConsoleUI::printBoxMid();
 
     auto reservedOrders = m_orderMgr.getOrdersByStatus(OrderStatus::RESERVED);
 
@@ -81,6 +81,6 @@ void Monitor::showStockStatus() const
             << std::right << std::setw(5) << stock
             << std::setw(9) << reservedDemand
             << "   " << icon << " " << state;
-        MenuUI::printBoxLine(row.str());
+        ConsoleUI::printBoxLine(row.str());
     }
 }
