@@ -64,7 +64,7 @@ C++ 콘솔 기반 반도체 시료 주문 관리 시스템 구현.
 #### 3-3. `ProductionLine` (생산 라인)
 - [ ] `std::queue<ProductionJob>` 기반 FIFO 생산 큐
 - [ ] **순차 처리**: 큐의 첫 번째 Job만 생산 진행, 완료 후 다음 Job 자동 시작
-- [ ] `tick()` 메서드: 현재 생산 중 Job의 `update()` 호출 → 완료 시 자동 CONFIRMED 전환 및 다음 Job 시작
+- [ ] `tick()` 메서드: 현재 생산 중 Job의 `update()` 호출 → 완료 시 `complete()`로 재고 반영 및 `CONFIRMED` 전환 → 다음 Job 자동 시작
   - 메뉴 진입 시마다 `tick()` 호출하여 상태 최신화
 - [ ] 생산 현황 표시: 현재 Job의 시료명, targetQty, producedQty, 잔여 시간 등
 - [ ] 대기 큐 목록 표시 (FIFO 순서)
@@ -98,7 +98,8 @@ C++ 콘솔 기반 반도체 시료 주문 관리 시스템 구현.
 - [ ] 시나리오 2: 시료 등록 → 주문 → 재고 부족 → 승인 → 생산 → 출고
 - [ ] 시나리오 3: 주문 거절 흐름 및 모니터링 미표시 확인
 - [ ] 시나리오 4: 생산 큐 FIFO 순서 검증 (다중 주문)
-- [ ] 시나리오 5: 잘못된 입력 처리 (존재하지 않는 ID, 음수 수량 등)
+- [ ] 시나리오 5: 생산 진행률 중간 확인 (producedQty 정확성 검증)
+- [ ] 엣지 케이스: 잘못된 입력 처리 (존재하지 않는 ID, 음수 수량, 수율 범위 초과 등)
 
 ---
 
@@ -107,8 +108,8 @@ C++ 콘솔 기반 반도체 시료 주문 관리 시스템 구현.
 ```
 MenuUI
  ├── SampleManager  ──→ Sample
- ├── OrderManager   ──→ Order ──→ Sample
- │                       └──→ ProductionLine ──→ ProductionJob
+ ├── OrderManager   ──→ Order       ──→ Sample
+ │              └──→ ProductionLine ──→ ProductionJob
  ├── Monitor        ──→ OrderManager, SampleManager
  └── ShippingManager──→ OrderManager
 ```

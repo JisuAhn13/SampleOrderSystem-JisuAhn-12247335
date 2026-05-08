@@ -80,7 +80,7 @@ SampleOrderSystem/
 | 항목 | 결정 내용 |
 |------|-----------|
 | 생산 방식 | 시간 기반 순차 처리 (FIFO, `std::chrono`) |
-| 현재 생산량 | `floor(경과시간 / avgProductionTime)` — 조회 시점 동적 계산 |
+| 현재 생산량 | `tick()` 호출 시 `update()`에서 `floor(경과시간 / avgProductionTime)`으로 `m_producedQty` 갱신; `getProducedQty()`는 캐시된 값 반환 |
 | 완료 조건 | `producedQty >= targetQty` 시 자동 `CONFIRMED` 전환 |
 | 재고 차감 | 재고 충분 경로: 승인 시 / 생산 경로: 생산 완료 시 |
 | ID 채번 | 1부터 시작하는 자동 증가 정수 |
@@ -92,5 +92,5 @@ SampleOrderSystem/
 - `ProductionJob::start()` 는 큐 대기 중 호출 금지 (생산 시작 시점에만)
 - `Sample*` 반환 후 `vector` 재할당 시 포인터 무효화 주의
 - `addStock()` 후 `reduceStock()` 순서 보장 필요
-- Windows 한글 출력: `SetConsoleOutputCP(CP_UTF8)` 적용
+- Windows 한글 출력: `SetConsoleOutputCP(CP_UTF8)` 및 `SetConsoleCP(CP_UTF8)` 모두 적용 (출력 + 입력 인코딩)
 - `tick()` 은 모든 서브메뉴 진입 시 첫 번째로 호출

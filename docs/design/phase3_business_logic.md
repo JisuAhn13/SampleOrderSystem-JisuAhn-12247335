@@ -33,9 +33,10 @@ public:
 
 ### 구현 주의 사항
 - `m_samples` 는 `std::vector<Sample>` (값 저장) → 반환 시 반드시 **포인터** 반환
-- `registerSample` 후 `emplace_back` 사용 → push_back 은 재할당 시 기존 포인터 무효화 위험
+- `push_back` / `emplace_back` 모두 재할당 시 기존 포인터 무효화 위험 (차이 없음)
   - 해결: `reserve` 로 충분한 공간 확보하거나 `std::deque`/`std::list` 사용 검토
 - `searchByName` : `std::string::find` 로 부분 일치 검색
+- `getWaitingJobs()` : `std::queue`는 반복자를 제공하지 않으므로, 큐를 임시 복사한 뒤 순회하여 `std::vector`로 변환
 
 > **포인터 무효화 주의**: `m_samples.emplace_back()` 호출 시 벡터가 재할당되면
 > 이전에 반환한 `Sample*` 포인터가 무효화됨.
@@ -120,7 +121,6 @@ public:
 
     const ProductionJob*              getCurrentJob()    const;
     std::vector<ProductionJob>        getWaitingJobs()   const;
-    const std::vector<ProductionJob>& getHistory()       const;
 };
 ```
 
