@@ -265,7 +265,7 @@ void MenuUI::handleSampleManagement()
                     }
                 }
                 printBoxBot();
-                getIntInput("  [Enter = 계속] > ");
+                getStringInput("  [Enter = 계속] > ");
                 break;
             }
             case 3: {
@@ -294,7 +294,7 @@ void MenuUI::handleSampleManagement()
                     }
                 }
                 printBoxBot();
-                getIntInput("  [Enter = 계속] > ");
+                getStringInput("  [Enter = 계속] > ");
                 break;
             }
             case 0: return;
@@ -381,7 +381,7 @@ void MenuUI::handleOrderManagement()
                     }
                 }
                 printBoxBot();
-                getIntInput("  [Enter = 계속] > ");
+                getStringInput("  [Enter = 계속] > ");
                 break;
             }
             case 3: {
@@ -467,7 +467,7 @@ void MenuUI::handleMonitoring()
                 printBoxMid();
                 m_monitor.showOrderStatus();
                 printBoxBot();
-                getIntInput("  [Enter = 계속] > ");
+                getStringInput("  [Enter = 계속] > ");
                 break;
             }
             case 2: {
@@ -478,7 +478,7 @@ void MenuUI::handleMonitoring()
                 printBoxMid();
                 m_monitor.showStockStatus();
                 printBoxBot();
-                getIntInput("  [Enter = 계속] > ");
+                getStringInput("  [Enter = 계속] > ");
                 break;
             }
             case 0: return;
@@ -517,7 +517,7 @@ void MenuUI::handleShipping()
                 printBoxMid();
                 m_shippingMgr.showConfirmedOrders();
                 printBoxBot();
-                getIntInput("  [Enter = 계속] > ");
+                getStringInput("  [Enter = 계속] > ");
                 break;
             }
             case 2: {
@@ -639,7 +639,7 @@ void MenuUI::handleProductionLine()
                     printBoxEmpty();
                 }
                 printBoxBot();
-                getIntInput("  [Enter = 계속] > ");
+                getStringInput("  [Enter = 계속] > ");
                 break;
             }
             case 2: {
@@ -665,7 +665,7 @@ void MenuUI::handleProductionLine()
                     }
                 }
                 printBoxBot();
-                getIntInput("  [Enter = 계속] > ");
+                getStringInput("  [Enter = 계속] > ");
                 break;
             }
             case 0: return;
