@@ -18,10 +18,10 @@ void Monitor::showOrderStatus() const
 {
     struct Section { OrderStatus status; const char* label; const char* icon; };
     const Section sections[] = {
-        { OrderStatus::RESERVED,  "접수",  "◇" },
-        { OrderStatus::PRODUCING, "생산중", "◉" },
-        { OrderStatus::CONFIRMED, "승인",  "✔" },
-        { OrderStatus::RELEASE,   "출고",  "►" },
+        { OrderStatus::RESERVED,  "RESERVED",  "◇" },
+        { OrderStatus::PRODUCING, "PRODUCING", "◉" },
+        { OrderStatus::CONFIRMED, "CONFIRMED", "✔" },
+        { OrderStatus::RELEASE,   "RELEASE",   "►" },
     };
 
     for (const auto& sec : sections) {
@@ -51,14 +51,15 @@ void Monitor::showStockStatus() const
         return;
     }
 
-    MenuUI::printBoxLine("   ID           이름            재고    상태");
+    MenuUI::printBoxLine("   ID           이름           재고  대기주문  상태");
     MenuUI::printBoxMid();
+
+    auto reservedOrders = m_orderMgr.getOrdersByStatus(OrderStatus::RESERVED);
 
     for (const auto* s : samples) {
         int stock = s->getStock();
 
         int reservedDemand = 0;
-        auto reservedOrders = m_orderMgr.getOrdersByStatus(OrderStatus::RESERVED);
         for (const auto* o : reservedOrders) {
             if (o->getSample()->getId() == s->getId())
                 reservedDemand += o->getQuantity();
@@ -78,6 +79,7 @@ void Monitor::showStockStatus() const
         row << "   " << std::left << std::setw(12) << s->getId()
             << std::setw(14) << s->getName()
             << std::right << std::setw(5) << stock
+            << std::setw(9) << reservedDemand
             << "   " << icon << " " << state;
         MenuUI::printBoxLine(row.str());
     }
