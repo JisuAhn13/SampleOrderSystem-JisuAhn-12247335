@@ -115,6 +115,7 @@ class ProductionJob {
     using TimePoint  = std::chrono::time_point<Clock>;
 
     Order*     m_order;
+    int        m_shortage;     // 생산 요청 부족분 (원본 보존)
     int        m_targetQty;    // 실 생산량 = ceil(부족분 / (수율 * 0.9))
     double     m_totalTime;    // 총 생산 시간 = avgProductionTime * targetQty (초)
     TimePoint  m_startTime;    // 생산 시작 시각 (start() 호출 시 기록)
@@ -129,6 +130,7 @@ public:
     void complete();// 재고 반영 + Order 상태 CONFIRMED 전환
 
     Order* getOrder()          const;
+    int    getShortage()       const;  // 부족분 (UI 표시용)
     int    getTargetQty()      const;
     double getTotalTime()      const;
     int    getProducedQty()    const;

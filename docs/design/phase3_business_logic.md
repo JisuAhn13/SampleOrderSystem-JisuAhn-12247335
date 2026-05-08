@@ -173,8 +173,8 @@ class Monitor {
 public:
     Monitor(OrderManager& om, SampleManager& sm);
 
-    void showOrderStatus() const;  // 상태별 주문 목록
-    void showStockStatus() const;  // 시료별 재고 + 상태
+    void showOrderStatus();  // 상태별 주문 목록
+    void showStockStatus();  // 시료별 재고 + 상태
 };
 ```
 

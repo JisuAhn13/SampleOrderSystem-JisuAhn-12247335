@@ -4,7 +4,7 @@
 
 class Sample {
 public:
-    Sample(const std::string& id, const std::string& name, double avgProductionTime, double yield, int stock);
+    Sample(const std::string& id, const std::string& name, double avgProductionTime, double yield, int stock = 0);
 
     const std::string& getId()              const;
     const std::string& getName()            const;

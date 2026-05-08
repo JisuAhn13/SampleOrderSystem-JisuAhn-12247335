@@ -44,6 +44,7 @@ ShippingManager — 출고 처리
 
 [UI]
 MenuUI          — 콘솔 메뉴 출력 및 입력 처리
+ConsoleUI       — 박스 테두리 출력 유틸리티 (namespace, MenuUI/Monitor/ShippingManager 공용)
 ```
 
 ---
