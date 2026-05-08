@@ -121,6 +121,11 @@ void MenuUI::handleSampleManagement()
         int choice = getIntInput("> ");
         switch (choice) {
             case 1: {
+                std::string id = getStringInput("시료 ID: ");
+                if (id.empty()) {
+                    std::cout << "  ID를 입력해주세요.\n";
+                    continue;
+                }
                 std::string name = getStringInput("시료 이름: ");
                 if (name.empty()) {
                     std::cout << "  시료 이름을 입력해주세요.\n";
@@ -136,12 +141,11 @@ void MenuUI::handleSampleManagement()
                     std::cout << "  0.0 초과 1.0 이하 값을 입력해주세요.\n";
                     continue;
                 }
-                int stock = getIntInput("초기 재고: ");
-                if (stock < 0) {
-                    std::cout << "  0 이상의 값을 입력해주세요.\n";
+                Sample* sample = m_sampleMgr.registerSample(id, name, avgTime, yield);
+                if (sample == nullptr) {
+                    std::cout << "  이미 존재하는 ID입니다.\n";
                     continue;
                 }
-                Sample* sample = m_sampleMgr.registerSample(name, avgTime, yield, stock);
                 std::cout << "  [완료] 시료 등록 성공. ID: " << sample->getId() << "\n";
                 break;
             }
@@ -215,7 +219,7 @@ void MenuUI::handleOrderManagement()
         int choice = getIntInput("> ");
         switch (choice) {
             case 1: {
-                int sampleId = getIntInput("시료 ID: ");
+                std::string sampleId = getStringInput("시료 ID: ");
                 if (m_sampleMgr.findById(sampleId) == nullptr) {
                     std::cout << "  존재하지 않는 시료 ID입니다.\n";
                     continue;

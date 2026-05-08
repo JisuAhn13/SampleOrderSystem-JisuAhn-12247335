@@ -1,11 +1,11 @@
 #include "Sample.h"
 
-Sample::Sample(int id, const std::string& name, double avgProductionTime, double yield, int stock)
+Sample::Sample(const std::string& id, const std::string& name, double avgProductionTime, double yield, int stock)
     : m_id(id), m_name(name), m_avgProductionTime(avgProductionTime), m_yield(yield), m_stock(stock)
 {
 }
 
-int Sample::getId() const { return m_id; }
+const std::string& Sample::getId() const { return m_id; }
 const std::string& Sample::getName() const { return m_name; }
 double Sample::getAvgProductionTime() const { return m_avgProductionTime; }
 double Sample::getYield() const { return m_yield; }

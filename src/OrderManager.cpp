@@ -9,7 +9,7 @@ OrderManager::OrderManager(SampleManager& sampleMgr, ProductionLine& productionL
     m_orders.reserve(1000);
 }
 
-Order* OrderManager::placeOrder(int sampleId, const std::string& customerName, int quantity)
+Order* OrderManager::placeOrder(const std::string& sampleId, const std::string& customerName, int quantity)
 {
     Sample* sample = m_sampleMgr.findById(sampleId);
     if (sample == nullptr) return nullptr;

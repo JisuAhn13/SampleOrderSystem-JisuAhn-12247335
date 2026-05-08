@@ -83,7 +83,7 @@ SampleOrderSystem/
 | 현재 생산량 | `tick()` 호출 시 `update()`에서 `floor(경과시간 / avgProductionTime)`으로 `m_producedQty` 갱신; `getProducedQty()`는 캐시된 값 반환 |
 | 완료 조건 | `producedQty >= targetQty` 시 자동 `CONFIRMED` 전환 |
 | 재고 차감 | 재고 충분 경로: 승인 시 / 생산 경로: 생산 완료 시 |
-| ID 채번 | 1부터 시작하는 자동 증가 정수 |
+| ID 입력 | 사용자가 직접 입력 (중복 불가) |
 
 ---
 

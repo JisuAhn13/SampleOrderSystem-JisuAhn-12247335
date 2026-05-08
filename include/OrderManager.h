@@ -11,7 +11,7 @@ class OrderManager {
 public:
     OrderManager(SampleManager& sampleMgr, ProductionLine& productionLine);
 
-    Order* placeOrder(int sampleId, const std::string& customerName, int quantity);
+    Order* placeOrder(const std::string& sampleId, const std::string& customerName, int quantity);
     bool   approveOrder(int orderId);
     bool   rejectOrder(int orderId);
 

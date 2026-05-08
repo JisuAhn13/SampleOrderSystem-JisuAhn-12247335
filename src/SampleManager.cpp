@@ -6,11 +6,12 @@ SampleManager::SampleManager()
     m_samples.reserve(1000);
 }
 
-Sample* SampleManager::registerSample(const std::string& name,
-                                       double avgTime, double yield,
-                                       int initStock)
+Sample* SampleManager::registerSample(const std::string& id,
+                                       const std::string& name,
+                                       double avgTime, double yield)
 {
-    m_samples.emplace_back(m_nextId++, name, avgTime, yield, initStock);
+    if (findById(id) != nullptr) return nullptr;  // 중복 ID 거부
+    m_samples.emplace_back(id, name, avgTime, yield, 0);
     return &m_samples.back();
 }
 
@@ -24,7 +25,7 @@ std::vector<Sample*> SampleManager::getAllSamples() const
     return result;
 }
 
-Sample* SampleManager::findById(int id)
+Sample* SampleManager::findById(const std::string& id)
 {
     for (auto& s : m_samples) {
         if (s.getId() == id) return &s;

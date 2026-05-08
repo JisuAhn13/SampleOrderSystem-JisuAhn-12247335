@@ -17,16 +17,15 @@ Sample 객체의 생성·저장·검색을 담당한다. Sample 의 소유권을
 ```cpp
 class SampleManager {
     std::vector<Sample> m_samples;  // Sample 소유
-    int m_nextId;                   // 자동 채번 (1부터 시작)
 public:
     SampleManager();
 
-    Sample* registerSample(const std::string& name,
-                           double avgTime, double yield,
-                           int initStock = 0);
+    Sample* registerSample(const std::string& id,
+                           const std::string& name,
+                           double avgTime, double yield);  // 중복 ID 시 nullptr 반환
 
     std::vector<Sample*> getAllSamples();
-    Sample*              findById(int id);
+    Sample*              findById(const std::string& id);
     std::vector<Sample*> searchByName(const std::string& keyword);
 };
 ```
@@ -60,7 +59,7 @@ class OrderManager {
 public:
     OrderManager(SampleManager& sm, ProductionLine& pl);
 
-    Order* placeOrder(int sampleId,
+    Order* placeOrder(const std::string& sampleId,
                       const std::string& customer, int qty);
     bool   approveOrder(int orderId);
     bool   rejectOrder(int orderId);

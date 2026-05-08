@@ -20,7 +20,7 @@ C++ 콘솔 기반 반도체 시료 주문 관리 시스템 구현.
 
 #### 2-1. `Sample` (시료)
 ```
-필드: id (int), name (string), avgProductionTime (double), yield (double), stock (int)
+필드: id (string), name (string), avgProductionTime (double), yield (double), stock (int)
 ```
 - [ ] `Sample.h` / `Sample.cpp` 작성
 - [ ] getter/setter, 재고 증감 메서드
@@ -49,7 +49,7 @@ C++ 콘솔 기반 반도체 시료 주문 관리 시스템 구현.
 ### Phase 3. 비즈니스 로직 구현
 
 #### 3-1. `SampleManager` (시료 관리)
-- [ ] 시료 등록 — ID 자동 채번
+- [ ] 시료 등록 — 사용자 직접 입력 ID (중복 불가)
 - [ ] 시료 전체 조회 (재고 포함)
 - [ ] 시료 이름 검색
 
@@ -137,5 +137,5 @@ MenuUI
 | 총 생산 시간 | `평균 생산시간 × 실 생산량` |
 | 생산 완료 조건 | `producedQty >= targetQty` 시 자동 CONFIRMED 전환 |
 | 큐 처리 | 첫 번째 Job 완료 후 다음 Job 자동 시작 |
-| ID 채번 | 1부터 시작하는 자동 증가 정수 |
+| ID 입력 | 사용자가 직접 입력 (중복 불가) |
 | 재고 차감 시점 | 재고 충분 경로: 승인 시 즉시 / 생산 경로: 생산 완료 시 |

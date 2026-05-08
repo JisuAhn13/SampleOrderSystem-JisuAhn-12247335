@@ -16,16 +16,16 @@
 
 ```cpp
 class Sample {
-    int         m_id;
+    std::string m_id;
     std::string m_name;
     double      m_avgProductionTime;  // 단위: 초 (1개 생산 시 소요 시간)
     double      m_yield;              // 수율 (0.0 ~ 1.0)
     int         m_stock;              // 현재 재고 수량
 public:
-    Sample(int id, const std::string& name,
+    Sample(const std::string& id, const std::string& name,
            double avgTime, double yield, int initStock = 0);
 
-    int                getId()                 const;
+    const std::string& getId()                 const;
     const std::string& getName()               const;
     double             getAvgProductionTime()  const;
     double             getYield()              const;
@@ -39,7 +39,7 @@ public:
 ### 주의 사항
 - `avgProductionTime` 단위는 **초(second)** → 시뮬레이션에서 실제 경과 시간과 비교
 - `reduceStock` 은 차감 전 검증 후 실패 시 false 반환 (예외 없음)
-- ID는 SampleManager가 외부에서 부여
+- ID는 사용자가 직접 입력, SampleManager가 중복 여부 검증 후 등록
 
 ---
 

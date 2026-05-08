@@ -5,9 +5,9 @@
 class Sample {
 public:
     Sample() = default;
-    Sample(int id, const std::string& name, double avgProductionTime, double yield, int stock);
+    Sample(const std::string& id, const std::string& name, double avgProductionTime, double yield, int stock);
 
-    int getId() const;
+    const std::string& getId() const;
     const std::string& getName() const;
     double getAvgProductionTime() const;
     double getYield() const;
@@ -21,7 +21,7 @@ public:
     bool reduceStock(int qty);
 
 private:
-    int m_id = 0;
+    std::string m_id;
     std::string m_name;
     double m_avgProductionTime = 0.0;
     double m_yield = 0.0;

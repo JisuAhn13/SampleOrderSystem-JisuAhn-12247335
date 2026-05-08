@@ -43,7 +43,8 @@ void scenario1() {
     Monitor mon(om, sm);
 
     // 준비: SiC-MOSFET, avgTime=5, yield=0.9, stock=20
-    Sample* s = sm.registerSample("SiC-MOSFET", 5.0, 0.9, 20);
+    Sample* s = sm.registerSample("S001", "SiC-MOSFET", 5.0, 0.9);
+    s->addStock(20);
     check(s != nullptr, "시료 등록 성공");
     check(s->getStock() == 20, "초기 재고 20");
 
@@ -79,7 +80,8 @@ void scenario2() {
     OrderManager om(sm, pl);
 
     // 준비: GaN-HPA, avgTime=0.05(테스트용), yield=0.8, stock=3
-    Sample* s = sm.registerSample("GaN-HPA", 0.05, 0.8, 3);
+    Sample* s = sm.registerSample("S002", "GaN-HPA", 0.05, 0.8);
+    s->addStock(3);
     Order* o = om.placeOrder(s->getId(), "B연구소", 10);
     check(o->getStatus() == OrderStatus::RESERVED, "접수 후 RESERVED");
 
@@ -110,7 +112,8 @@ void scenario3() {
     ProductionLine pl;
     OrderManager om(sm, pl);
 
-    Sample* s = sm.registerSample("InP-HBT", 3.0, 0.85, 5);
+    Sample* s = sm.registerSample("S003", "InP-HBT", 3.0, 0.85);
+    s->addStock(5);
     Order* o = om.placeOrder(s->getId(), "C기관", 2);
 
     bool rejected = om.rejectOrder(o->getOrderId());
@@ -139,7 +142,7 @@ void scenario4() {
     ProductionLine pl;
     OrderManager om(sm, pl);
 
-    Sample* s = sm.registerSample("SiGe-BiCMOS", 0.05, 0.9, 0);
+    Sample* s = sm.registerSample("S004", "SiGe-BiCMOS", 0.05, 0.9);
     Order* o1 = om.placeOrder(s->getId(), "고객1", 5);
     Order* o2 = om.placeOrder(s->getId(), "고객2", 3);
     Order* o3 = om.placeOrder(s->getId(), "고객3", 4);
@@ -194,7 +197,7 @@ void scenario5() {
     ProductionLine pl;
     OrderManager om(sm, pl);
 
-    Sample* s = sm.registerSample("GaAs-pHEMT", 0.05, 0.9, 0);
+    Sample* s = sm.registerSample("S005", "GaAs-pHEMT", 0.05, 0.9);
     Order* o = om.placeOrder(s->getId(), "D사", 9);
     om.approveOrder(o->getOrderId());
 
@@ -234,10 +237,11 @@ void edgeCases() {
     ProductionLine pl;
     OrderManager om(sm, pl);
 
-    Sample* s = sm.registerSample("TestSample", 1.0, 0.9, 5);
+    Sample* s = sm.registerSample("E001", "TestSample", 1.0, 0.9);
+    s->addStock(5);
 
     // 1. 존재하지 않는 시료 ID로 주문 접수
-    Order* badOrder = om.placeOrder(9999, "고객", 1);
+    Order* badOrder = om.placeOrder("X999", "고객", 1);
     check(badOrder == nullptr, "존재하지 않는 시료 ID → null 반환");
 
     // 2. RESERVED 아닌 주문 승인 시도 (재고 충분으로 즉시 CONFIRMED)
@@ -260,14 +264,15 @@ void edgeCases() {
     check(emptyPl.getCurrentJob() == nullptr, "getCurrentJob() on empty → nullptr");
 
     // 5. reduceStock 재고 부족 시 false 반환 및 재고 유지
-    Sample* s2 = sm.registerSample("LowStock", 1.0, 0.9, 2);
+    Sample* s2 = sm.registerSample("E002", "LowStock", 1.0, 0.9);
+    s2->addStock(2);
     bool reduced = s2->reduceStock(5);
     check(!reduced, "재고 부족 시 reduceStock false 반환");
     check(s2->getStock() == 2, "reduceStock 실패 시 재고 유지");
 
     // 6. searchByName 부분 일치
-    sm.registerSample("AlGaN", 1.0, 0.9, 0);
-    sm.registerSample("AlGaAs", 1.0, 0.9, 0);
+    sm.registerSample("E003", "AlGaN", 1.0, 0.9);
+    sm.registerSample("E004", "AlGaAs", 1.0, 0.9);
     auto results = sm.searchByName("AlGa");
     check(results.size() == 2, "searchByName('AlGa') → 2건 반환");
 }
