@@ -1,9 +1,12 @@
 #include "ShippingManager.h"
 #include "OrderManager.h"
+#include "MenuUI.h"
 #include "Order.h"
 #include "Sample.h"
 
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 
 ShippingManager::ShippingManager(OrderManager& orderMgr)
     : m_orderMgr(orderMgr)
@@ -12,19 +15,21 @@ ShippingManager::ShippingManager(OrderManager& orderMgr)
 
 void ShippingManager::showConfirmedOrders() const
 {
-    std::cout << "=== 출고 대기 주문 ===\n";
-
     auto orders = m_orderMgr.getOrdersByStatus(OrderStatus::CONFIRMED);
     if (orders.empty()) {
-        std::cout << "  (출고 대기 주문 없음)\n";
+        MenuUI::printBoxLine("   출고 대기 주문이 없습니다.");
         return;
     }
 
+    MenuUI::printBoxLine("   주문ID   시료명            고객명         수량");
+    MenuUI::printBoxMid();
     for (const auto* o : orders) {
-        std::cout << "  " << o->getOrderId()
-                  << " | " << o->getSample()->getName()
-                  << " | " << o->getCustomerName()
-                  << " | " << o->getQuantity() << "\n";
+        std::ostringstream row;
+        row << "   " << std::left << std::setw(7) << o->getOrderId()
+            << std::setw(16) << o->getSample()->getName()
+            << std::setw(13) << o->getCustomerName()
+            << std::right << o->getQuantity() << " 개";
+        MenuUI::printBoxLine(row.str());
     }
 }
 
