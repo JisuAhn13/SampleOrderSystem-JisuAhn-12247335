@@ -110,9 +110,8 @@ void MenuUI::showMainMenu() const
 
 void MenuUI::handleSampleManagement()
 {
-    m_productionLine.tick();
-
     while (true) {
+        m_productionLine.tick();
         printHeader("시료 관리");
         std::cout << "  1. 시료 등록\n";
         std::cout << "  2. 시료 목록 조회\n";
@@ -204,9 +203,8 @@ void MenuUI::handleSampleManagement()
 
 void MenuUI::handleOrderManagement()
 {
-    m_productionLine.tick();
-
     while (true) {
+        m_productionLine.tick();
         printHeader("주문 관리");
         std::cout << "  1. 주문 접수\n";
         std::cout << "  2. 접수 주문 목록\n";
@@ -305,9 +303,8 @@ void MenuUI::handleOrderManagement()
 
 void MenuUI::handleMonitoring()
 {
-    m_productionLine.tick();
-
     while (true) {
+        m_productionLine.tick();
         printHeader("모니터링");
         std::cout << "  1. 주문 현황 (상태별)\n";
         std::cout << "  2. 재고 현황\n";
@@ -334,9 +331,8 @@ void MenuUI::handleMonitoring()
 
 void MenuUI::handleShipping()
 {
-    m_productionLine.tick();
-
     while (true) {
+        m_productionLine.tick();
         printHeader("출고 처리");
         std::cout << "  1. 출고 대기 목록 조회\n";
         std::cout << "  2. 출고 실행\n";
@@ -375,9 +371,8 @@ void MenuUI::handleShipping()
 
 void MenuUI::handleProductionLine()
 {
-    m_productionLine.tick();
-
     while (true) {
+        m_productionLine.tick();
         printHeader("생산 라인");
         std::cout << "  1. 생산 현황\n";
         std::cout << "  2. 대기 주문 목록\n";
