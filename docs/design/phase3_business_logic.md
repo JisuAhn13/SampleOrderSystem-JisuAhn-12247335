@@ -192,9 +192,10 @@ public:
 ```
 reservedDemand = RESERVED 상태인 해당 시료 주문 수량의 합계
 
-if stock == 0           → "고갈"
-elif stock < demand     → "부족"
-else                    → "여유"
+if stock == 0                  → "고갈"
+elif stock < reservedDemand   → "부족"
+else                           → "여유"
+(reservedDemand == 0이고 stock > 0이면 항상 "여유"로 판단)
 ```
 
 ---
