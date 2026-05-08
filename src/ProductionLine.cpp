@@ -17,7 +17,6 @@ void ProductionLine::tick()
     if (!m_current.has_value()) return;
 
     if (m_current->update()) {
-        // complete()가 addStock + reduceStock + setStatus(CONFIRMED) 모두 처리
         m_current->complete();
         m_history.push_back(*m_current);
         m_current.reset();
@@ -53,7 +52,6 @@ const ProductionJob* ProductionLine::getCurrentJob() const
 std::vector<ProductionJob> ProductionLine::getWaitingJobs() const
 {
     std::vector<ProductionJob> result;
-    // std::queue는 반복자를 제공하지 않으므로 임시 복사 후 순회
     std::queue<ProductionJob> temp = m_queue;
     while (!temp.empty()) {
         result.push_back(temp.front());

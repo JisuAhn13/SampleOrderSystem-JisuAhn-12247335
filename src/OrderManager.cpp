@@ -28,11 +28,9 @@ bool OrderManager::approveOrder(int orderId)
     int quantity = order->getQuantity();
 
     if (stock >= quantity) {
-        // 재고 충분: 즉시 차감 후 CONFIRMED
         sample->reduceStock(quantity);
         order->setStatus(OrderStatus::CONFIRMED);
     } else {
-        // 재고 부족: shortage를 그대로 enqueue (ProductionJob 생성자가 targetQty 계산)
         int shortage = quantity - stock;
         order->setStatus(OrderStatus::PRODUCING);
         m_productionLine.enqueue(order, shortage);

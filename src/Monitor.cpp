@@ -24,10 +24,10 @@ void Monitor::showOrderStatus()
         { OrderStatus::RELEASE,   "RELEASE",   "►" },
     };
 
-    for (const auto& sec : sections) {
-        std::string header = std::string("  ") + sec.icon + "  [ " + sec.label + " ]";
+    for (const auto& section : sections) {
+        std::string header = std::string("  ") + section.icon + "  [ " + section.label + " ]";
         ConsoleUI::printBoxLine(header);
-        auto orders = m_orderMgr.getOrdersByStatus(sec.status);
+        auto orders = m_orderMgr.getOrdersByStatus(section.status);
         if (orders.empty()) {
             ConsoleUI::printBoxLine("       (없음)");
         } else {
@@ -56,13 +56,13 @@ void Monitor::showStockStatus()
 
     auto reservedOrders = m_orderMgr.getOrdersByStatus(OrderStatus::RESERVED);
 
-    for (const auto* s : samples) {
-        int stock = s->getStock();
+    for (const auto* sample : samples) {
+        int stock = sample->getStock();
 
         int reservedDemand = 0;
-        for (const auto* o : reservedOrders) {
-            if (o->getSample()->getId() == s->getId())
-                reservedDemand += o->getQuantity();
+        for (const auto* order : reservedOrders) {
+            if (order->getSample()->getId() == sample->getId())
+                reservedDemand += order->getQuantity();
         }
 
         const char* state;
@@ -76,8 +76,8 @@ void Monitor::showStockStatus()
         }
 
         std::ostringstream row;
-        row << "   " << std::left << std::setw(12) << s->getId()
-            << std::setw(14) << s->getName()
+        row << "   " << std::left << std::setw(12) << sample->getId()
+            << std::setw(14) << sample->getName()
             << std::right << std::setw(5) << stock
             << std::setw(9) << reservedDemand
             << "   " << icon << " " << state;

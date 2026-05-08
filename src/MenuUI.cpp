@@ -31,11 +31,11 @@ void MenuUI::clearScreen()  { system("cls"); }
 
 void MenuUI::printProgressBar(int current, int total, int barWidth)
 {
-    int filled = (total > 0) ? (current * barWidth / total) : 0;
-    if (filled > barWidth) filled = barWidth;
+    int filledCount = (total > 0) ? (current * barWidth / total) : 0;
+    if (filledCount > barWidth) filledCount = barWidth;
     std::cout << "[";
     for (int i = 0; i < barWidth; ++i)
-        std::cout << (i < filled ? "█" : "░");
+        std::cout << (i < filledCount ? "█" : "░");
     std::cout << "]";
 }
 
@@ -54,16 +54,16 @@ void MenuUI::printSeparator()
 template<typename T>
 static T readNumericInput(const std::string& prompt)
 {
-    T val;
+    T value;
     while (true) {
         std::cout << std::string(ConsoleUI::LEFT_PAD, ' ') << prompt;
-        if (std::cin >> val) break;
+        if (std::cin >> value) break;
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cout << std::string(ConsoleUI::LEFT_PAD, ' ') << "  숫자를 입력해주세요.\n";
     }
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    return val;
+    return value;
 }
 
 int MenuUI::getIntInput(const std::string& prompt)
@@ -78,10 +78,10 @@ double MenuUI::getDoubleInput(const std::string& prompt)
 
 std::string MenuUI::getStringInput(const std::string& prompt)
 {
-    std::string val;
+    std::string value;
     std::cout << std::string(ConsoleUI::LEFT_PAD, ' ') << prompt;
-    std::getline(std::cin, val);
-    return val;
+    std::getline(std::cin, value);
+    return value;
 }
 
 // ─── 공용 행 출력 헬퍼 ───────────────────────────────────────────────────────
@@ -307,13 +307,13 @@ void MenuUI::handleOrderManagement()
                     ConsoleUI::printBoxBot();
                     continue;
                 }
-                int qty = getIntInput("  주문 수량: ");
-                if (qty <= 0) {
+                int orderQty = getIntInput("  주문 수량: ");
+                if (orderQty <= 0) {
                     ConsoleUI::printBoxLine("  ! 1 이상의 수량을 입력해주세요.");
                     ConsoleUI::printBoxBot();
                     continue;
                 }
-                Order* order = m_orderMgr.placeOrder(sampleId, customer, qty);
+                Order* order = m_orderMgr.placeOrder(sampleId, customer, orderQty);
                 ConsoleUI::printBoxMid();
                 std::ostringstream oss;
                 oss << "  ✔ 주문 접수 완료  주문 ID: " << order->getOrderId();
@@ -497,6 +497,76 @@ void MenuUI::handleShipping()
 
 // ─── 생산 라인 ────────────────────────────────────────────────────────────────
 
+void MenuUI::printCurrentProductionJob(const ProductionJob* job) const
+{
+    int    orderQty       = job->getOrder()->getQuantity();
+    int    shortage       = job->getShortage();
+    int    targetQty      = job->getTargetQty();
+    int    producedQty    = job->getProducedQty();
+    double remainingTime  = job->getRemainingTime();
+
+    int remainingMinutes = static_cast<int>(remainingTime) / 60;
+    int remainingSeconds = static_cast<int>(remainingTime) % 60;
+
+    ConsoleUI::printBoxLine("   [현재 생산 중]");
+    ConsoleUI::printBoxEmpty();
+    {
+        std::ostringstream row;
+        row << "   주문 ID   :  " << job->getOrder()->getOrderId();
+        ConsoleUI::printBoxLine(row.str());
+    }
+    {
+        std::ostringstream row;
+        row << "   시료      :  " << job->getOrder()->getSample()->getName();
+        ConsoleUI::printBoxLine(row.str());
+    }
+    {
+        std::ostringstream row;
+        row << "   주문 정보 :  수량 " << orderQty << " 개  /  부족분 " << shortage << " 개";
+        ConsoleUI::printBoxLine(row.str());
+    }
+    {
+        std::ostringstream row;
+        row << "   현재 생산 :  " << producedQty << " 개";
+        ConsoleUI::printBoxLine(row.str());
+    }
+    ConsoleUI::printBoxEmpty();
+    {
+        constexpr int PROGRESS_BAR_WIDTH = 24;
+        std::ostringstream bar;
+        bar << "   진행률   :  ";
+        int filledCount = (targetQty > 0) ? (producedQty * PROGRESS_BAR_WIDTH / targetQty) : 0;
+        if (filledCount > PROGRESS_BAR_WIDTH) filledCount = PROGRESS_BAR_WIDTH;
+        bar << "[";
+        for (int i = 0; i < PROGRESS_BAR_WIDTH; ++i)
+            bar << (i < filledCount ? "█" : "░");
+        bar << "]  " << producedQty << " / " << targetQty;
+        ConsoleUI::printBoxLine(bar.str());
+    }
+    {
+        std::ostringstream row;
+        row << "   잔여 시간 :  " << remainingMinutes << "분 "
+            << std::setw(2) << std::setfill('0') << remainingSeconds << "초";
+        ConsoleUI::printBoxLine(row.str());
+    }
+    ConsoleUI::printBoxEmpty();
+}
+
+void MenuUI::printWaitingJobRows(const std::vector<ProductionJob>& jobs) const
+{
+    ConsoleUI::printBoxLine("   순서   주문ID   시료명              목표수량");
+    ConsoleUI::printBoxMid();
+    for (std::size_t i = 0; i < jobs.size(); ++i) {
+        const ProductionJob& job = jobs[i];
+        std::ostringstream row;
+        row << "   " << std::left << std::setw(6) << (i + 1)
+            << std::setw(8) << job.getOrder()->getOrderId()
+            << std::setw(18) << job.getOrder()->getSample()->getName()
+            << std::right << job.getTargetQty() << " 개";
+        ConsoleUI::printBoxLine(row.str());
+    }
+}
+
 void MenuUI::handleProductionLine()
 {
     while (true) {
@@ -522,58 +592,7 @@ void MenuUI::handleProductionLine()
                 ConsoleUI::printBoxLine("           ◉  생산 라인 - 생산 현황");
                 ConsoleUI::printBoxMid();
                 if (m_productionLine.hasCurrent()) {
-                    const ProductionJob* job = m_productionLine.getCurrentJob();
-                    int    qty  = job->getOrder()->getQuantity();
-                    int    sht  = job->getShortage();
-                    int    tgt  = job->getTargetQty();
-                    int    cur  = job->getProducedQty();
-                    double rem  = job->getRemainingTime();
-
-                    int remMin = static_cast<int>(rem) / 60;
-                    int remSec = static_cast<int>(rem) % 60;
-
-                    ConsoleUI::printBoxLine("   [현재 생산 중]");
-                    ConsoleUI::printBoxEmpty();
-                    {
-                        std::ostringstream r;
-                        r << "   주문 ID   :  " << job->getOrder()->getOrderId();
-                        ConsoleUI::printBoxLine(r.str());
-                    }
-                    {
-                        std::ostringstream r;
-                        r << "   시료      :  " << job->getOrder()->getSample()->getName();
-                        ConsoleUI::printBoxLine(r.str());
-                    }
-                    {
-                        std::ostringstream r;
-                        r << "   주문 정보 :  수량 " << qty << " 개  /  부족분 " << sht << " 개";
-                        ConsoleUI::printBoxLine(r.str());
-                    }
-                    {
-                        std::ostringstream r;
-                        r << "   현재 생산 :  " << cur << " 개";
-                        ConsoleUI::printBoxLine(r.str());
-                    }
-                    ConsoleUI::printBoxEmpty();
-                    {
-                        constexpr int BAR_WIDTH = 24;
-                        std::ostringstream bar;
-                        bar << "   진행률   :  ";
-                        int filled = (tgt > 0) ? (cur * BAR_WIDTH / tgt) : 0;
-                        if (filled > BAR_WIDTH) filled = BAR_WIDTH;
-                        bar << "[";
-                        for (int i = 0; i < BAR_WIDTH; ++i)
-                            bar << (i < filled ? "█" : "░");
-                        bar << "]  " << cur << " / " << tgt;
-                        ConsoleUI::printBoxLine(bar.str());
-                    }
-                    {
-                        std::ostringstream r;
-                        r << "   잔여 시간 :  " << remMin << "분 "
-                          << std::setw(2) << std::setfill('0') << remSec << "초";
-                        ConsoleUI::printBoxLine(r.str());
-                    }
-                    ConsoleUI::printBoxEmpty();
+                    printCurrentProductionJob(m_productionLine.getCurrentJob());
                 } else {
                     ConsoleUI::printBoxEmpty();
                     ConsoleUI::printBoxLine("      현재 생산 중인 작업이 없습니다.");
@@ -589,21 +608,11 @@ void MenuUI::handleProductionLine()
                 ConsoleUI::printBoxTop();
                 ConsoleUI::printBoxLine("             ◉  생산 대기 큐");
                 ConsoleUI::printBoxMid();
-                auto waiting = m_productionLine.getWaitingJobs();
-                if (waiting.empty()) {
+                auto waitingJobs = m_productionLine.getWaitingJobs();
+                if (waitingJobs.empty()) {
                     ConsoleUI::printBoxLine("   대기 중인 작업이 없습니다.");
                 } else {
-                    ConsoleUI::printBoxLine("   순서   주문ID   시료명              목표수량");
-                    ConsoleUI::printBoxMid();
-                    for (std::size_t i = 0; i < waiting.size(); ++i) {
-                        const ProductionJob& job = waiting[i];
-                        std::ostringstream row;
-                        row << "   " << std::left << std::setw(6) << (i + 1)
-                            << std::setw(8) << job.getOrder()->getOrderId()
-                            << std::setw(18) << job.getOrder()->getSample()->getName()
-                            << std::right << job.getTargetQty() << " 개";
-                        ConsoleUI::printBoxLine(row.str());
-                    }
+                    printWaitingJobRows(waitingJobs);
                 }
                 ConsoleUI::printBoxBot();
                 getStringInput("  [Enter = 계속] > ");

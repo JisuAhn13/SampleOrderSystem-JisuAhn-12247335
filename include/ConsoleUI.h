@@ -1,8 +1,7 @@
 #pragma once
 #include <string>
 
-// 콘솔 박스 출력 유틸리티
-// MenuUI, Monitor, ShippingManager 등 모든 레이어에서 공용으로 사용
+// 박스 테두리 문자와 디스플레이 폭 계산을 한 곳에서 관리해 출력 일관성을 보장한다.
 namespace ConsoleUI {
     constexpr int SCREEN_W = 80;
     constexpr int BOX_W    = 58;

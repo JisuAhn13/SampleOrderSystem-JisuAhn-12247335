@@ -11,7 +11,7 @@ public:
 
     Sample* registerSample(const std::string& id,
                            const std::string& name,
-                           double avgTime, double yield);  // 중복 ID 시 nullptr 반환
+                           double avgTime, double yield);
 
     std::vector<Sample*> getAllSamples();
     Sample*              findById(const std::string& id);

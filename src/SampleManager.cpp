@@ -2,7 +2,7 @@
 
 SampleManager::SampleManager()
 {
-    // vector 재할당에 의한 포인터 무효화 방지
+    // reserve를 충분히 잡아 Sample* 포인터 반환 후 vector 재할당으로 인한 포인터 무효화를 방지한다.
     m_samples.reserve(1000);
 }
 
@@ -10,7 +10,7 @@ Sample* SampleManager::registerSample(const std::string& id,
                                        const std::string& name,
                                        double avgTime, double yield)
 {
-    if (findById(id) != nullptr) return nullptr;  // 중복 ID 거부
+    if (findById(id) != nullptr) return nullptr;
     m_samples.emplace_back(id, name, avgTime, yield, 0);
     return &m_samples.back();
 }

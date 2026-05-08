@@ -1,4 +1,5 @@
 #pragma once
+#include "ProductionJob.h"
 #include <string>
 #include <vector>
 
@@ -40,4 +41,6 @@ private:
 
     void printSampleRows(const std::vector<Sample*>& samples) const;
     void printReservedOrderRows(const std::vector<Order*>& orders) const;
+    void printCurrentProductionJob(const ProductionJob* job) const;
+    void printWaitingJobRows(const std::vector<ProductionJob>& jobs) const;
 };
