@@ -219,13 +219,13 @@ void MenuUI::handleSampleManagement()
                     std::cin.get();
                     continue;
                 }
-                double avgTime = getDoubleInput("  평균 생산시간 : ");
+                double avgTime = getDoubleInput("  평균 생산시간(s) : ");
                 if (avgTime <= 0) {
                     printBoxLine("  ! 0보다 큰 값을 입력해주세요.");
                     printBoxBot();
                     continue;
                 }
-                double yield = getDoubleInput("  수율 (0~1)    : ");
+                double yield = getDoubleInput("  수율 (0.0~1.0)   : ");
                 if (yield <= 0.0 || yield > 1.0) {
                     printBoxLine("  ! 0.0 초과 1.0 이하 값을 입력해주세요.");
                     printBoxBot();
