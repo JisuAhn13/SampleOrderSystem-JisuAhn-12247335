@@ -18,6 +18,7 @@ public:
 
     Order* getOrder()         const;
     int    getTargetQty()     const;
+    int    getShortage()      const;
     double getTotalTime()     const;
     int    getProducedQty()   const;
     double getElapsedTime()   const;
@@ -27,6 +28,7 @@ public:
 private:
     Order*     m_order       = nullptr;
     int        m_targetQty   = 0;
+    int        m_shortage    = 0;
     double     m_totalTime   = 0.0;
     TimePoint  m_startTime;
     int        m_producedQty = 0;

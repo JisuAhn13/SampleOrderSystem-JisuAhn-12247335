@@ -5,7 +5,7 @@
 #include <cmath>
 
 ProductionJob::ProductionJob(Order* order, int shortage)
-    : m_order(order)
+    : m_order(order), m_shortage(shortage)
 {
     double yield = order->getSample()->getYield();
     m_targetQty  = static_cast<int>(std::ceil(static_cast<double>(shortage) / (yield * 0.9)));
@@ -14,6 +14,7 @@ ProductionJob::ProductionJob(Order* order, int shortage)
 
 Order* ProductionJob::getOrder()       const { return m_order; }
 int    ProductionJob::getTargetQty()   const { return m_targetQty; }
+int    ProductionJob::getShortage()    const { return m_shortage; }
 double ProductionJob::getTotalTime()   const { return m_totalTime; }
 int    ProductionJob::getProducedQty() const { return m_producedQty; }
 bool   ProductionJob::isStarted()      const { return m_started; }

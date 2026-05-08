@@ -534,10 +534,15 @@ void MenuUI::handleProductionLine()
                 ConsoleUI::printBoxMid();
                 if (m_productionLine.hasCurrent()) {
                     const ProductionJob* job = m_productionLine.getCurrentJob();
+                    int    qty  = job->getOrder()->getQuantity();
+                    int    sht  = job->getShortage();
                     int    tgt  = job->getTargetQty();
                     int    cur  = job->getProducedQty();
                     double tot  = job->getTotalTime();
                     double rem  = job->getRemainingTime();
+
+                    int remMin = static_cast<int>(rem) / 60;
+                    int remSec = static_cast<int>(rem) % 60;
 
                     ConsoleUI::printBoxLine("   [현재 생산 중]");
                     ConsoleUI::printBoxEmpty();
@@ -553,7 +558,7 @@ void MenuUI::handleProductionLine()
                     }
                     {
                         std::ostringstream r;
-                        r << "   목표 수량 :  " << tgt << " 개";
+                        r << "   주문 정보 :  수량 " << qty << " 개  /  부족분 " << sht << " 개";
                         ConsoleUI::printBoxLine(r.str());
                     }
                     {
@@ -576,14 +581,8 @@ void MenuUI::handleProductionLine()
                     }
                     {
                         std::ostringstream r;
-                        r << std::fixed << std::setprecision(1);
-                        r << "   총 생산   :  " << tot << " 초";
-                        ConsoleUI::printBoxLine(r.str());
-                    }
-                    {
-                        std::ostringstream r;
-                        r << std::fixed << std::setprecision(1);
-                        r << "   잔여 시간 :  " << rem << " 초";
+                        r << "   잔여 시간 :  " << remMin << "분 "
+                          << std::setw(2) << std::setfill('0') << remSec << "초";
                         ConsoleUI::printBoxLine(r.str());
                     }
                     ConsoleUI::printBoxEmpty();
